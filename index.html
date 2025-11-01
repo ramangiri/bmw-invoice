@@ -46,17 +46,23 @@
       <p>No.49, Pillaiyar Kolli Street, Potheri - 603203</p>
       <p>Cell: 8608405491 / 9176429825</p>
     </div>
+
     <div class="invoice-meta">
       <div><strong>Invoice No:</strong> <input type="text" id="invoice-number"></div>
       <div><strong>Date:</strong> <input type="date" id="invoice-date"></div>
     </div>
+
     <div class="customer">
       <strong>Customer Name:</strong>
-      <input type="text" id="customer-name">
+      <input type="text" id="customer-name" value="Madhampatty Food Services">
       <strong>Address:</strong>
-      <textarea id="customer-address"></textarea>
+      <textarea id="customer-address">BMW India PVT
+No:36 1st Main Road
+Mahindra World City Chengalpettu</textarea>
     </div>
+
     <div class="actions"><button id="add-item">+ Add Item</button></div>
+
     <table id="invoice">
       <thead><tr><th>S.No</th><th>Particulars</th><th>Qty</th><th>Rate</th><th>Amount</th><th>Delete</th></tr></thead>
       <tbody id="invoice-body">
@@ -64,17 +70,65 @@
       </tbody>
       <tfoot><tr><td colspan="5" style="text-align:right;">TOTAL</td><td id="total"></td></tr></tfoot>
     </table>
-    <div class="actions"><button id="download">Download PDF</button><button id="print">Print Invoice</button></div>
+
+    <div class="actions">
+      <button id="download">Download PDF</button>
+      <button id="print">Print Invoice</button>
+    </div>
+
     <div class="footer"><div>Receiver Signature</div><div>Authorised Signature</div></div>
   </div>
+
   <script>
-    document.getElementById("invoice-date").valueAsDate=new Date();
-    function calculateTotal(){let rows=document.querySelectorAll("#invoice-body tr");let grandTotal=0;rows.forEach(row=>{let qty=parseFloat(row.cells[2].innerText)||0;let rate=parseFloat(row.cells[3].innerText)||0;let amount=qty*rate;row.querySelector(".amount").innerText=amount?amount.toFixed(2):"";grandTotal+=amount;});document.getElementById("total").innerText=grandTotal.toFixed(2);}
-    document.addEventListener("input",calculateTotal);
-    document.getElementById("add-item").addEventListener("click",()=>{let tbody=document.getElementById("invoice-body");let rowCount=tbody.rows.length+1;let row=tbody.insertRow();row.innerHTML=`<td>${rowCount}</td><td contenteditable="true">New Item</td><td contenteditable="true"></td><td contenteditable="true"></td><td class="amount"></td><td><button onclick="deleteRow(this)">X</button></td>`;});
-    function deleteRow(button){let row=button.closest("tr");row.remove();updateSerials();calculateTotal();}
-    function updateSerials(){let rows=document.querySelectorAll("#invoice-body tr");rows.forEach((row,i)=>row.cells[0].innerText=i+1);}
-    if("serviceWorker" in navigator){window.addEventListener("load",()=>{navigator.serviceWorker.register("service-worker.js").then(reg=>console.log("✅ Service Worker registered:",reg)).catch(err=>console.log("❌ Service Worker error:",err));});}
+    document.getElementById("invoice-date").valueAsDate = new Date();
+
+    function calculateTotal() {
+      let rows = document.querySelectorAll("#invoice-body tr");
+      let grandTotal = 0;
+      rows.forEach(row => {
+        let qty = parseFloat(row.cells[2].innerText) || 0;
+        let rate = parseFloat(row.cells[3].innerText) || 0;
+        let amount = qty * rate;
+        row.querySelector(".amount").innerText = amount ? amount.toFixed(2) : "";
+        grandTotal += amount;
+      });
+      document.getElementById("total").innerText = grandTotal.toFixed(2);
+    }
+    document.addEventListener("input", calculateTotal);
+
+    document.getElementById("add-item").addEventListener("click", () => {
+      let tbody = document.getElementById("invoice-body");
+      let rowCount = tbody.rows.length + 1;
+      let row = tbody.insertRow();
+      row.innerHTML = `
+        <td>${rowCount}</td>
+        <td contenteditable="true">New Item</td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td class="amount"></td>
+        <td><button onclick="deleteRow(this)">X</button></td>
+      `;
+    });
+
+    function deleteRow(button) {
+      let row = button.closest("tr");
+      row.remove();
+      updateSerials();
+      calculateTotal();
+    }
+
+    function updateSerials() {
+      let rows = document.querySelectorAll("#invoice-body tr");
+      rows.forEach((row, i) => row.cells[0].innerText = i + 1);
+    }
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+          .then(reg => console.log('✅ Service Worker registered:', reg))
+          .catch(err => console.log('❌ Service Worker error:', err));
+      });
+    }
   </script>
 </body>
 </html>
